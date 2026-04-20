@@ -70,9 +70,9 @@ WMEAC.buildClosuresListFromRecurringUI = function ()
         
         for (var i=0; i<ntimes; i++)
         {
-            var start = firstDateTimeStart.clone();
+            let start = firstDateTimeStart.clone();
             start.addMinutes((evD * 1440 + evH * 60 + evM)*i);
-            var end = start.clone();
+            let end = start.clone();
             end.addMinutes(dD * 1440 + dH * 60 + dM);
             if (end > rangeEndDateTime) // stop if after range end
                 break;
@@ -104,11 +104,11 @@ WMEAC.buildClosuresListFromRecurringUI = function ()
         
         for (var d=0; d<dayCount; d++)
         {
-            var start = day0.clone();
+            let start = day0.clone();
             start.addMinutes(d*1440);
             if (dow[start.getUTCDay()])
             {
-                var end = start.clone();
+                let end = start.clone();
                 end.addMinutes(dD * 1440 + dH * 60 + dM);
                 if (end > rangeEndDateTime) // stop if after range end
                     break;
@@ -122,8 +122,8 @@ WMEAC.buildClosuresListFromRecurringUI = function ()
         WMEAC.lastGeneratedHolidays.forEach(function (e, i) {
             if (($('#wmeac-advanced-closure-dialog-holidays-' + i)).is(':checked'))
             {
-                var start = new JDate(e.date).addMinutes(startTimeM);
-                var end = start.clone();
+                let start = new JDate(e.date).addMinutes(startTimeM);
+                let end = start.clone();
                 end.addMinutes(dD * 1440 + dH * 60 + dM);
                 list.push({start: WMEAC.dateToClosureStr(start), end: WMEAC.dateToClosureStr(end)});
             }
@@ -151,12 +151,15 @@ WMEAC.refreshClosureList = function ()
             const selection = WMEAC.wmeSDK.Editing.getSelection();
             var existingClosures = [];
             if (selection.ids.length > 0 && selection.objectType == "segment") {
-                //existingClosures = W.selectionManager.getSelectedWMEFeatures().reduce(function (p, c, i) {
+                let revsegs = WMEAC.wmeSDK.DataModel.Segments.getReversedSegments( { segmentIds: selection.ids });
+                let realWay = direction;
                 existingClosures = selection.ids.reduce(function (p, c, i) {
-                    var revSegs = W.selectionManager.getReversedSegments();
-                    var isReversed = revSegs.hasOwnProperty(c) && revSegs[c];
-                    var realWay = isReversed?(direction==1?2:1):direction;
-                    //return p.concat(W.model.roadClosures.getObjectArray(function (e) {
+                    for (let r in revsegs) {
+                        if (revsegs[r].id == c) {
+                            realWay = (direction==WMEAC.sharedClosureDirection.A_TO_B) ? WMEAC.sharedClosureDirection.B_TO_A : WMEAC.sharedClosureDirection.A_TO_B;
+                            break;
+                        }
+                    }
                     return p.concat(WMEAC.wmeSDK.DataModel.RoadClosures.getAll().filter(e => {
                         return (e.segmentId==c &&
                                 (direction==3 || (e.isForward && realWay==1) || (!e.isForward && realWay==2)));
