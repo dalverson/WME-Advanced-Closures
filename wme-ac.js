@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        WME Advanced Closures
-// @version     2025.03.26.01
+// @version     2026.04.20.01
 // @description Recurrent and imported closures in the Waze Map Editor
 // @namespace   WMEAC
 // @match       https://www.waze.com/*editor*
@@ -8,6 +8,8 @@
 // @exclude     https://beta.waze.com/*user/*editor/*
 // @exclude     https://www.waze.com/*user/*editor/*
 // @exclude     https://www.waze.com/discuss/*
+// @exclude     https://www.waze.com/editor/sdk/*
+// @exclude     https://beta.waze.com/editor/sdk/*
 // @icon data:image/png;base64,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
 // @grant       unsafeWindow
 // @grant       GM_xmlhttpRequest
@@ -73,7 +75,7 @@ var WMEAC={};
 WMEAC.isDebug=false;
 WMEAC.wmeSDK = null;
 
-WMEAC.ac_version="2025.03.26.01";
+WMEAC.ac_version="2026.04.20.01";
 
 WMEAC.closureTabTimeout=null;
 
@@ -246,7 +248,7 @@ WMEAC.reloadRoadLayer = function ()
     // W.controller.reloadData();
 };
 
-WMEAC.reloadClosuresLayer = function (endHandler)
+WMEAC.reloadClosuresLayer = async function (endHandler)
 {
     // SDK - NEEDED ??
   /*  var l=W.map.getLayerByName("closures");
@@ -254,7 +256,7 @@ WMEAC.reloadClosuresLayer = function (endHandler)
     // W.controller.reloadData();
     */
     if (endHandler) {
-        WMEAC.waitMapLoaded();
+        await WMEAC.waitMapLoaded();
         endHandler();
     }
 };
@@ -737,57 +739,56 @@ WMEAC.initUI = async function ()
     // W.model.events.register("mergeend", null, WMEAC.refreshHighlight);
     // WMEAC.refreshHighlight();
     window.setTimeout(WMEAC.connectAdvancedClosureTabHandlers);
-    window.setTimeout(WMEAC.setupMTEobserver, 2000);
-};
 
-WMEAC.setupMTEobserver = function()
-{
-    var mteObserver = new MutationObserver(function(mutations) {
-        mutations.forEach(function(mutation) {
-            for (var i = 0; i < mutation.addedNodes.length; i++) {
-                var addedNode = mutation.addedNodes[i];
-
-                if (addedNode.nodeType === Node.TEXT_NODE && addedNode['s-nr'] ) {
-                    const x = $('.mte-edit-view > wz-section-header');
-                    if (x.length > 0) {
-                        const mtev = x[0].shadowRoot.querySelector('.subtitle');
-                        if (mtev) {
-                            mtev.style.overflow = 'visible';
-                            mtev.style.fontSize = '10px';
-                            break;
-                        }
-                    }
-                }
-            }
-        });
-    });
-    mteObserver.observe(WMEAC.getId('sidepanel-mtes'), {childList: true, subtree: true});
 };
 
 WMEAC.waitMapLoaded = async function()
 {
-    for (let j=0; j<100; j++) {
-        await new Promise(r => setTimeout(r,300));
-        const ldf = W.app.layout.model.attributes.loadingFeatures; // SDK - need access to this status
-        const pend = W.app.layout.model.attributes.pendingOperations.length;
-        console.debug('AC - pendingOps: ' + pend + ' ldf: ' + ldf);
-        if (pend > 0) {
-            console.debug('AC - pendingOps: ' + pend);
-            console.debug('AC - pending: ' + W.app.layout.model.attributes.pendingOperations[0]);
-        }
-        if (!ldf && pend==0) {
-            await new Promise(r => setTimeout(r,50));
-            break;
-        }
-    }
+    var count = 1;
+    return new Promise(function (resolve) {
+        var interval = setInterval(function () {
+            const ldf = W.app.attributes.loadingFeatures; // SDK - need access to this status
+            const pend = W.app.attributes.pendingOperations.length;
+            const mapl = WMEAC.wmeSDK.State.isMapLoading();
+            console.debug('AC - pendingOps: ' + pend + ' ldf: ' + ldf + ' isMapLd: ' + mapl);
+            count++;
+            if (pend > 0) {
+                console.debug('AC - pending: ' + W.app.attributes.pendingOperations.join());
+            }
+
+            if (!ldf && pend==0) {
+                clearInterval(interval);
+                resolve(null);
+            }
+            else if (count > 100) {
+                clearInterval(interval);;
+                console.warn('AC - timeout waiting for features loaded');
+                resolve(null)
+            }
+        }, 100);
+    });
+
 }
 WMEAC.waitSelectionReady = async function()
 {
-    for (let j=0; j<100; j++) {
-        let selection = WMEAC.wmeSDK.Editing.getSelection();
-        if (selection.ids.length > 0) break;
-        await new Promise(r => setTimeout(r,300));
-    }
+    var count = 1;
+    return new Promise(function (resolve) {
+        var interval = setInterval(function () {
+            const selection = WMEAC.wmeSDK.Editing.getSelection();
+            console.debug('AC - sel items: ' + selection.ids.length);
+            count++;
+
+            if (selection.ids.length > 0) {
+                clearInterval(interval);
+                resolve(null);
+            }
+            else if (count > 100) {
+                clearInterval(interval);;
+                console.warn('AC - timeout waiting for selection');
+                resolve(null)
+            }
+        }, 100);
+    });
 }
 
 WMEAC.installButtonInClosureTab = function (node)
@@ -1166,7 +1167,7 @@ WMEAC.connectAdvancedClosureDialogHandlers = function ()
             var direction = $('#wmeac-advanced-closure-dialog-direction').val();
             var isIT = $('#wmeac-advanced-closure-dialog-ignoretraffic').is(':checked');
             var mteId = $("#wmeac-advanced-closure-dialog-mteid").val();
-            closureList = rc.list.map(function (e) {
+            let closureList = rc.list.map(function (e) {
                 //return {reason: reason, direction: direction, startDate: e.start, endDate: e.end, location: cllocation, permanent: isIT};
                 var details = {reason: reason, direction: direction, startDate: e.start, endDate: e.end, location: "", permanent: isIT};
                 if (mteId)
@@ -1177,12 +1178,13 @@ WMEAC.connectAdvancedClosureDialogHandlers = function ()
             var selectionReversed=[];
             if (direction!='3') // not two way
             {
-                var rev = W.selectionManager.getReversedSegments();
+                let revsegs = WMEAC.wmeSDK.DataModel.Segments.getReversedSegments( { segmentIds: selection.ids });
                 let ids = selection.ids.filter(function (e) {
-                    if (rev[e])
-                    {
-                        selectionReversed.push(e);
-                        return false;
+                    for (let r in revsegs) {
+                        if (revsegs[r].id == e) {
+                            selectionReversed.push(e);
+                            return false;
+                        }
                     }
                     return true;
                 });
@@ -1254,7 +1256,7 @@ WMEAC.connectAdvancedClosureDialogHandlers = function ()
             var directionStr = direction==1?"(A &#8594; B)":(direction==2?"(B &#8594; A)":"(&#8646;)");
             var isIT = $('#wmeac-advanced-closure-dialog-ignoretraffic').is(':checked');
             const mteId = $("#wmeac-advanced-closure-dialog-mteid").val();
-            closureList = rc.list.map(function (e) {
+            let closureList = rc.list.map(function (e) {
                 //return {reason: reason, direction: direction, startDate: e.start, endDate: e.end, location: cllocation, permanent: isIT};
                 var details = {reason: reason, direction: direction, startDate: e.start, endDate: e.end, location: "", permanent: isIT};
                 if (mteId)
@@ -1313,9 +1315,9 @@ WMEAC.connectAdvancedClosureDialogHandlers = function ()
     });
     $('#wmeac-advanced-closure-dialog-each-dayall').on('click', function () {
         var atLeastOneChecked=false;
-        for (var i=0; i<7; i++)
+        for (let i=0; i<7; i++)
             atLeastOneChecked = atLeastOneChecked || $("#wmeac-advanced-closure-dialog-each-"+i).is(':checked');
-        for (var i=0; i<7; i++)
+        for (let i=0; i<7; i++)
             $("#wmeac-advanced-closure-dialog-each-"+i).prop('checked', !atLeastOneChecked);
         $('#wmeac-advanced-closure-dialog-each-dayall').prop('checked', !atLeastOneChecked);
     });
@@ -1367,34 +1369,10 @@ WMEAC.connectAdvancedClosureDialogHandlers = function ()
                 $(this).trigger('change');
             }
         });
-        // $('#wmeac-advanced-closure-dialog-duration-hour').spinner({
-            // min: 0,
-            // spin: function (event, ui) {
-                // $(this).trigger('change');
-            // }
-        // });
-        // $('#wmeac-advanced-closure-dialog-duration-minute').spinner({
-        // spin: function (event, ui) {
-                 // if (ui.value >= 60) {
-                     // $(this).spinner('value', ui.value - 60);
-                     // $('#wmeac-advanced-closure-dialog-duration-hour').spinner('stepUp');
-                     // return false;
-                 // } else if (ui.value < 0) {
-                     // $(this).spinner('value', ui.value + 60);
-                     // $('#wmeac-advanced-closure-dialog-duration-hour').spinner('stepDown');
-                     // return false;
-                 // }
-                 // $(this).trigger('change');
-             // },
-             // change: function (event) {
-                // if (event.target.value<0 || event.target.value>59)
-                    // $(this).spinner('value', 0);
-             // }
-         // });
+
     }
-     
-     
-     
+
+
      $('#wmeac-advanced-closure-dialog-repeat,#wmeac-advanced-closure-dialog-each,#wmeac-advanced-closure-dialog-holiday').on('click', function(e){
         window.setTimeout(WMEAC.refreshClosureList);
      });
@@ -1680,7 +1658,7 @@ WMEAC.ClassClosure = function (options)
     this.eventId=null;
     if (options.hasOwnProperty('eventId') && options.eventId!='') this.eventId=options.eventId;
     
-    this.segIDs = this.segIDs.split(';');
+    this.segIDs = this.segIDs.split(';').map((s) => Number(s));
     var matches = this.lonlat.match(/lon=(-?\d+\.?\d*)&lat=(-?\d+\.?\d*)/);
     if (matches && matches.length==3)
         this.lonlat = {lon: parseFloat(matches[1]), lat: parseFloat(matches[2])};
@@ -1720,11 +1698,6 @@ WMEAC.ClassClosure = function (options)
             return WMEAC.wmeSDK.DataModel.Segments.hasPermissions({permission: "EDIT_CLOSURES", segmentId: seg.id });
         });
 
-        // SDK - need old style segment objects for now since closure code called getID() on these objects
-        var oldsegs = segs.map (function (e) {
-            return (W.model.segments.getObjectById(e.id));
-        });
-               
         if (segs.length==0)
         {
             failureHandler( {errors: [{attributes: {details: "No segment. Check permissions or existence."}}]} );
@@ -1739,8 +1712,7 @@ WMEAC.ClassClosure = function (options)
                 }).join(', ') + (c=='noCity'?'':' (' + c + ')'));
             }).join(' ; ');
             
-            var sc = require("Waze/Modules/Closures/Models/SharedClosure");
-            var closureDetails = {reason: this.reason, direction: (this.direction=="A to B"?WMEAC.sharedClosureDirection.A_TO_B:(this.direction=="B to A"?WMEAC.sharedClosureDirection.B_TO_A:WMEAC.sharedClosureDirection.TWO_WAY)), startDate: this.startDate, endDate: this.endDate, location: closureLocation, permanent: this.permanent=='Yes', segments: oldsegs};
+            var closureDetails = {reason: this.reason, direction: (this.direction=="A to B"?WMEAC.sharedClosureDirection.A_TO_B:(this.direction=="B to A"?WMEAC.sharedClosureDirection.B_TO_A:WMEAC.sharedClosureDirection.TWO_WAY)), startDate: this.startDate, endDate: this.endDate, location: closureLocation, permanent: this.permanent=='Yes', segments: this.segIDs};
             if (this.eventId!=null) closureDetails.eventId = this.eventId;
             WMEAC.addClosure(closureDetails, successHandler, failureHandler);
         }
@@ -1874,9 +1846,9 @@ WMEAC.buildClosuresListFromRecurringUI = function ()
         
         for (var i=0; i<ntimes; i++)
         {
-            var start = firstDateTimeStart.clone();
+            let start = firstDateTimeStart.clone();
             start.addMinutes((evD * 1440 + evH * 60 + evM)*i);
-            var end = start.clone();
+            let end = start.clone();
             end.addMinutes(dD * 1440 + dH * 60 + dM);
             if (end > rangeEndDateTime) // stop if after range end
                 break;
@@ -1908,11 +1880,11 @@ WMEAC.buildClosuresListFromRecurringUI = function ()
         
         for (var d=0; d<dayCount; d++)
         {
-            var start = day0.clone();
+            let start = day0.clone();
             start.addMinutes(d*1440);
             if (dow[start.getUTCDay()])
             {
-                var end = start.clone();
+                let end = start.clone();
                 end.addMinutes(dD * 1440 + dH * 60 + dM);
                 if (end > rangeEndDateTime) // stop if after range end
                     break;
@@ -1926,8 +1898,8 @@ WMEAC.buildClosuresListFromRecurringUI = function ()
         WMEAC.lastGeneratedHolidays.forEach(function (e, i) {
             if (($('#wmeac-advanced-closure-dialog-holidays-' + i)).is(':checked'))
             {
-                var start = new JDate(e.date).addMinutes(startTimeM);
-                var end = start.clone();
+                let start = new JDate(e.date).addMinutes(startTimeM);
+                let end = start.clone();
                 end.addMinutes(dD * 1440 + dH * 60 + dM);
                 list.push({start: WMEAC.dateToClosureStr(start), end: WMEAC.dateToClosureStr(end)});
             }
@@ -1955,12 +1927,15 @@ WMEAC.refreshClosureList = function ()
             const selection = WMEAC.wmeSDK.Editing.getSelection();
             var existingClosures = [];
             if (selection.ids.length > 0 && selection.objectType == "segment") {
-                //existingClosures = W.selectionManager.getSelectedWMEFeatures().reduce(function (p, c, i) {
+                let revsegs = WMEAC.wmeSDK.DataModel.Segments.getReversedSegments( { segmentIds: selection.ids });
+                let realWay = direction;
                 existingClosures = selection.ids.reduce(function (p, c, i) {
-                    var revSegs = W.selectionManager.getReversedSegments();
-                    var isReversed = revSegs.hasOwnProperty(c) && revSegs[c];
-                    var realWay = isReversed?(direction==1?2:1):direction;
-                    //return p.concat(W.model.roadClosures.getObjectArray(function (e) {
+                    for (let r in revsegs) {
+                        if (revsegs[r].id == c) {
+                            realWay = (direction==WMEAC.sharedClosureDirection.A_TO_B) ? WMEAC.sharedClosureDirection.B_TO_A : WMEAC.sharedClosureDirection.A_TO_B;
+                            break;
+                        }
+                    }
                     return p.concat(WMEAC.wmeSDK.DataModel.RoadClosures.getAll().filter(e => {
                         return (e.segmentId==c &&
                                 (direction==3 || (e.isForward && realWay==1) || (!e.isForward && realWay==2)));
@@ -2102,31 +2077,81 @@ WMEAC.addClosure = function (options, successHandler, failureHandler)
     {
         WMEAC.log("Adding closure: ", options);
         var fail = function (e) {
-            return function (f) {
                 if (failureHandler)
-                    failureHandler(f);
+                    failureHandler(e);
                 else
                     WMEAC.log("Failed to create closure:", f);
-            };
         };
         var done = function (e) {
-            return function (f) {
+            // since the save call does not return any error status, look for the error dialog in the DOM
+            const er = document.querySelector('.error-list');
+
+            if (er) {
+                const ertx = er.querySelector('.description').textContent;
+                er.querySelector('.close-button').click();
+                console.error('CSV file error, ' + ertx);
+                if (failureHandler) {
+                    failureHandler( {errors: [{attributes: {details: ertx}}]} );
+                }
+                WMEAC.wmeSDK.Editing.undoAll(); // undo the closure actions that had an error
+            }
+            else {
                 if (successHandler)
-                    successHandler(f);
+                    successHandler(e);
                 else
-                    WMEAC.log("Closure successful:", f);
-            };
+                    WMEAC.log("Closure successful:", e);
+            }
         };
     
-        var cab = require("Waze/Modules/Closures/Models/ClosureActionBuilder");
-        var sc = require("Waze/Modules/Closures/Models/SharedClosure");
-        var t = {};
-        var closureDetails = {closures: [], attributions: [], reason: options.reason + String.fromCharCode(160), direction: options.direction, startDate: options.startDate, endDate: options.endDate, location: options.location, permanent: options.permanent, segments: options.segments, closuresType: 'roadClosure', reverseSegments: {}};
-        if (options.hasOwnProperty('eventId') && options.eventId!=null) closureDetails.eventId = options.eventId;
-        var c = new sc(closureDetails, {dataModel: W.model, segmentSelection: W.selectionManager.getSegmentSelection(), isNewClosure: true, closedNodesMap: {} });
-        WMEAC.setClosureNodes(c);
-        t.actions=[cab.add(c, W.loginManager.user, W.model)];
-        W.controller.save(t).then(done()).catch(fail());
+        const mte = options.eventId ? options.eventId : null;
+        const sd = new Date(options.startDate);
+        const ed = new Date(options.endDate);
+        let sdoff = sd.getTimezoneOffset() * 60000;
+        let edoff = ed.getTimezoneOffset() * 60000;
+        let args = {
+            description: options.reason,
+            endDate: ed.valueOf() - edoff,
+            fromNodeClosed: false,
+            isForward: false,
+            isPermanent: options.permanent,
+            segmentId: 0,
+            startDate: sd.valueOf() - sdoff,
+            trafficEventId: mte
+        };
+        let revsegs = WMEAC.wmeSDK.DataModel.Segments.getReversedSegments( { segmentIds: options.segments });
+        for (let s in options.segments) {
+            args.segmentId = Number(options.segments[s]);
+            let dir = options.direction;
+            if (dir != WMEAC.sharedClosureDirection.TWO_WAY && revsegs.length > 0) {
+                for (let r in revsegs) {
+                    if (revsegs[r].id == args.segmentId) {
+                        dir = (dir==WMEAC.sharedClosureDirection.A_TO_B) ? WMEAC.sharedClosureDirection.B_TO_A : WMEAC.sharedClosureDirection.A_TO_B;
+                        break;
+                    }
+                }
+            }
+            try {
+                if (dir==WMEAC.sharedClosureDirection.A_TO_B || dir==WMEAC.sharedClosureDirection.TWO_WAY) {
+                    args.isForward = true;
+                    WMEAC.wmeSDK.DataModel.RoadClosures.addClosure(args);
+                }
+                if (dir==WMEAC.sharedClosureDirection.B_TO_A || dir==WMEAC.sharedClosureDirection.TWO_WAY) {
+                    args.isForward = false;
+                    WMEAC.wmeSDK.DataModel.RoadClosures.addClosure(args);
+                }
+            } catch(e) {
+                console.error("AC error addClosure",e);
+                fail({errors: [{attributes: {details: e.message}}]});
+            }
+        }
+        WMEAC.wmeSDK.Editing.save().then(
+            (value) => {
+                done(value);
+            },
+            (reason) => {
+                fail(reason);
+            });
+
         return true;
     }
     return false;
@@ -2153,60 +2178,100 @@ WMEAC.addClosureListFromSelection = function (closureList, successHandler, failu
     
     var c=closureList[i];
     var fail = function (e) {
-        return function (f) {
-            if (failureHandler)
-            {
-                var details = [];
-                if (f.message) { console.error('AC: ' + f.message + ' - ' + f.stack); }
-                f.errors.forEach(function (err) {
+        if (failureHandler)
+        {
+            var details = [];
+            if (e.message) { console.error('AC: ' + e.message + ' - ' + e.stack); }
+            if (typeof e == 'string') {
+                details.push(e);
+            } else {
+                e.errors.forEach(function (err) {
                     if (err.hasOwnProperty('attributes') && err.attributes.hasOwnProperty('details'))
                         details.push(err.attributes.details);
                 });
-                failureHandler(i, details.join (' | '));
             }
-            else
-                WMEAC.log("Failed to create closure:", f);
-            WMEAC.addClosureListFromSelection(closureList, successHandler, failureHandler, endHandler, i+1);
-        };
+            failureHandler(i, details.join (' | '));
+        }
+        else
+            WMEAC.log("Failed to create closure:", e);
+        WMEAC.addClosureListFromSelection(closureList, successHandler, failureHandler, endHandler, i+1);
+
     };
     var done = function (e) {
-        return function (f) {
-            if (successHandler)
-            {
-                successHandler(i, "OK");
+        // since the save call does not return any error status, look for the error dialog in the DOM
+        const er = document.querySelector('.error-list');
+
+        if (er) {
+            const ertx = er.querySelector('.description').textContent;
+            er.querySelector('.close-button').click();
+            console.error('AC closure error, ' + ertx);
+            if (failureHandler) {
+                failureHandler(i, ertx );
             }
-            else
-                WMEAC.log("Closure successful:", f);
-            WMEAC.addClosureListFromSelection(closureList, successHandler, failureHandler, endHandler, i+1);
-        };
+            WMEAC.wmeSDK.Editing.undoAll(); // undo the closure actions that had an error
+        }
+        else if (successHandler) {
+            successHandler(i, "OK");
+        }
+        else
+            WMEAC.log("Closure successful:", e);
+        WMEAC.addClosureListFromSelection(closureList, successHandler, failureHandler, endHandler, i+1);
     };
 
-    var cab = require("Waze/Modules/Closures/Models/ClosureActionBuilder");
-    var sc = require("Waze/Modules/Closures/Models/SharedClosure");
-    var t = {};
     var segIDs = WMEAC.wmeSDK.Editing.getSelection();
-    var segs = WMEAC.segmentsIDsToSegments(segIDs);
-    // SDK - need old style segment objects for now since closure code called getID() on these objects
-    var oldsegs = segs.map (function (e) {
-        return (W.model.segments.getObjectById(e.id));
-    });
-    var cityStreets = WMEAC.getCityStreetsFromSegmentSet(segs);
-    var closureLocation = Object.keys(cityStreets).map(function (c) {
-        return (Object.keys(cityStreets[c]).map(function (s) {
-            if (s=='noStreet') return I18n.translations[I18n.locale].edit.address.no_street;
-            return s;
-        }).join(', ') + (c=='noCity'?'':' (' + c + ')'));
-    }).join(' ; ');
-        
-    var closureDetails = {closures: [], attributions: [], reason: closureList[i].reason + String.fromCharCode(160), direction: closureList[i].direction, startDate: closureList[i].startDate, endDate: closureList[i].endDate, location: closureLocation, permanent: closureList[i].permanent, segments: oldsegs, closuresType: 'roadClosure', reverseSegments: W.selectionManager.getReversedSegments()};
-    if (closureList[i].hasOwnProperty('eventId') && closureList[i].eventId!=null) closureDetails.eventId = closureList[i].eventId;
-    const ssel = W.selectionManager.getSegmentSelection();
-    var c = new sc(closureDetails, {dataModel: W.model, segmentSelection: ssel, isNewClosure: true, closedNodesMap: {} });
-    WMEAC.setClosureNodes(c);
-    t.actions=[cab.add(c, W.loginManager.user, W.model)];
-    W.controller.save(t).then(done()).catch(fail());
+    const mte = closureList[i].eventId ? closureList[i].eventId : null;
+    const sd = new Date(closureList[i].startDate);
+    const ed = new Date(closureList[i].endDate);
+    let sdoff = sd.getTimezoneOffset() * 60000;
+    let edoff = ed.getTimezoneOffset() * 60000;
+    let args = {
+        description: closureList[i].reason,
+        endDate: ed.valueOf() - edoff,
+        fromNodeClosed: false,
+        isForward: false,
+        isPermanent: closureList[i].permanent,
+        segmentId: 0,
+        startDate: sd.valueOf() - sdoff,
+        trafficEventId: mte
+    };
+
+    let revsegs = WMEAC.wmeSDK.DataModel.Segments.getReversedSegments( { segmentIds: segIDs.ids });
+    for (let s in segIDs.ids) {
+        args.segmentId = segIDs.ids[s];
+        let dir = closureList[i].direction;
+        if (dir != WMEAC.sharedClosureDirection.TWO_WAY && revsegs.length > 0) {
+            for (let r in revsegs) {
+                if (revsegs[r].id == args.segmentId) {
+                    dir = (dir==WMEAC.sharedClosureDirection.A_TO_B) ? WMEAC.sharedClosureDirection.B_TO_A : WMEAC.sharedClosureDirection.A_TO_B;
+                    break;
+                }
+            }
+        }
+        try {
+            if (dir==WMEAC.sharedClosureDirection.A_TO_B || dir==WMEAC.sharedClosureDirection.TWO_WAY) {
+                args.isForward = true;
+                WMEAC.wmeSDK.DataModel.RoadClosures.addClosure(args);
+            }
+            if (dir==WMEAC.sharedClosureDirection.B_TO_A || dir==WMEAC.sharedClosureDirection.TWO_WAY) {
+                args.isForward = false;
+                WMEAC.wmeSDK.DataModel.RoadClosures.addClosure(args);
+            }
+        } catch(e) {
+            console.error("AC error addClosure",e);
+            fail( e.message );
+        }
+    }
+    WMEAC.wmeSDK.Editing.save().then(
+        (value) => {
+            done(value);
+        },
+        (reason) => {
+            fail(reason);
+        });
+
 };
 
+/* NOT CURRENTLY USED ---
 WMEAC.addClosureFromSelection = function (options, successHandler, failureHandler)
 {
     if (options &&
@@ -2254,7 +2319,9 @@ WMEAC.addClosureFromSelection = function (options, successHandler, failureHandle
     }
     return false;
 };
+*/
 
+// closure removal not currently supported in the SDK
 WMEAC.removeClosure = function (closures, successHandler, failureHandler)
 {
     var fail = function (e) {
@@ -2474,7 +2541,7 @@ WMEAC.buildInlineClosureUI = function (closure, action)
                     <div class="wmeac-csv-closures-list-col-apply"><a href="#" title="Apply action of this closure"><i class="fa fa-arrow-circle-right"></i></a></div>\
                     <div class="wmeac-csv-closures-minilog" style="display: block;">' + (action=='add'?'Ready to apply':(action=='remove'?'Ready to remove':'')) + '</div>';
     // attach handlers
-    liElt.children[5].children[0].addEventListener('click', function (e) { // select the segs on this line of the CSV
+    liElt.children[5].children[0].addEventListener('click', async function (e) { // select the segs on this line of the CSV
         WMEAC.csvClearLog();
         // get closure id:
         var cid = parseInt(e.target.parentNode.parentNode.parentNode.getAttribute('closureID'));
@@ -2483,77 +2550,45 @@ WMEAC.buildInlineClosureUI = function (closure, action)
         });
         WMEAC.log('Closure to target:', closure);
         WMEAC.wmeSDK.Map.setMapCenter( { lonLat: closure.closure.lonlat, zoomLevel: closure.closure.zoom } );
-        var tmp3 = function selectSegments()
-        {
-            WMEAC.log("Now select segments...");
-            var segs = WMEAC.segmentsIDsToSegments(closure.closure.segIDs);
-            if (segs.length!=closure.closure.segIDs.length)
-            {
-                if (segs.length==0)
-                {
-                    WMEAC.csvAddLog("No segment found: " + closure.closure.comment + "(" + closure.closure.reason + ")\n");
-                    WMEAC.setCSVMiniLog(closure, "Selection failed: no segment found", 3);
-                }
-                else
-                {
-                    WMEAC.csvAddLog("Partial selection (" + segs.length + "/" + closure.closure.segIDs.length + "): " + closure.closure.comment + "(" + closure.closure.reason + ")\n");
-                    WMEAC.setCSVMiniLog(closure, "Partial selection: " + segs.length + "/" + closure.closure.segIDs.length, 2);
-                }
-                alert ("Warning: missing segments.\nFound " + segs.length + "/" + closure.closure.segIDs.length + " segment(s)");
-            }
-            else
-            {
-                WMEAC.csvAddLog("Selection ok (" + segs.length + "): " + closure.closure.comment + "(" + closure.closure.reason + ")\n");
-                WMEAC.setCSVMiniLog(closure, "Selection OK: " + segs.length, 1);
-            }
-            if (segs.length!=0)
-            {
-                const selection = { ids: closure.closure.segIDs, objectType: 'segment' };
-                WMEAC.wmeSDK.Editing.setSelection( { selection } );
-                var tmp = function selectionReady()
-                {
-                    if (W.selectionManager.getSelectedFeatures().length==0)
-                        window.setTimeout(selectionReady, 500);
-                    else
-                    {
-                        const ed = document.getElementsByClassName('segment-feature-editor');
-                        const tabs = ed[0].querySelector('wz-tabs');
-                        const tl = tabs.shadowRoot.querySelectorAll('.wz-tab-label');
-                        if ( tl && tl.length > 0) {
-                            tl[1].click();  // do we want to select the closures tab ?
-                        }
-                    }
-                };
-                window.setTimeout(tmp, 500);
-            }
-        };
-        var tmp2 = function readyToSelect() {
-            WMEAC.log("Test if ready to select...");
-            if (W.app.layout.model.attributes.pendingOperations.length > 0 || W.app.layout.model.attributes.loadingFeatures==true)
-            {
-                WMEAC.log("Not yet. Waiting for WME...");
-                window.setTimeout(readyToSelect, 500);
-            }
-            else
-            {
-                tmp3();
-            }
-        };
-        var tmp1 = function mapMovedEnd() {
-            WMEAC.log("Test if roads are reloaded...");
-            if (W.app.layout.model.attributes.pendingOperations.length > 0 || W.app.layout.model.attributes.loadingFeatures==true)
-            {
-                WMEAC.log("Not yet. Waiting for WME...");
-                window.setTimeout(mapMovedEnd, 500);
-            }
-            else
-            {
-                WMEAC.reloadRoadLayer();
-                tmp2();
-            }
-        };
-        window.setTimeout(tmp1, 500);
         e.preventDefault();
+        WMEAC.log("Test if ready to select...");
+        await WMEAC.waitMapLoaded();
+
+        WMEAC.log("Now select segments...");
+        var segs = WMEAC.segmentsIDsToSegments(closure.closure.segIDs);
+        if (segs.length!=closure.closure.segIDs.length)
+        {
+            if (segs.length==0)
+            {
+                WMEAC.csvAddLog("No segment found: " + closure.closure.comment + "(" + closure.closure.reason + ")\n");
+                WMEAC.setCSVMiniLog(closure, "Selection failed: no segment found", 3);
+            }
+            else
+            {
+                WMEAC.csvAddLog("Partial selection (" + segs.length + "/" + closure.closure.segIDs.length + "): " + closure.closure.comment + "(" + closure.closure.reason + ")\n");
+                WMEAC.setCSVMiniLog(closure, "Partial selection: " + segs.length + "/" + closure.closure.segIDs.length, 2);
+            }
+            alert ("Warning: missing segments.\nFound " + segs.length + "/" + closure.closure.segIDs.length + " segment(s)");
+        }
+        else
+        {
+            WMEAC.csvAddLog("Selection ok (" + segs.length + "): " + closure.closure.comment + "(" + closure.closure.reason + ")\n");
+            WMEAC.setCSVMiniLog(closure, "Selection OK: " + segs.length, 1);
+        }
+        if (segs.length!=0)
+        {
+            const ids = closure.closure.segIDs.map((s) => Number(s));
+            const selection = { ids, objectType: 'segment' };
+            WMEAC.wmeSDK.Editing.setSelection( { selection } );
+            await WMEAC.waitSelectionReady();
+            await new Promise(r => setTimeout(r,50));
+            const ed = document.getElementsByClassName('segment-feature-editor');
+            const tabs = ed[0].querySelector('wz-tabs');
+            const tl = tabs.shadowRoot.querySelectorAll('.wz-tab-label');
+            if ( tl && tl.length > 0) {
+                tl[1].click(); // do we want to select the closures tab ?
+            }
+        }
     });
     liElt.children[6].children[0].addEventListener('click', function (e) { // apply closure on the segs on this line of the CSV
         // get closure id:
@@ -2570,7 +2605,7 @@ WMEAC.buildInlineClosureUI = function (closure, action)
     return liElt;
 };
 
-WMEAC.csvApplyClosure = function(closure, handler)
+WMEAC.csvApplyClosure = async function(closure, handler)
 {
     WMEAC.wmeSDK.Map.setMapCenter( { lonLat: closure.closure.lonlat, zoomLevel: closure.closure.zoom } );
     function applySuccess(evt)
@@ -2592,41 +2627,14 @@ WMEAC.csvApplyClosure = function(closure, handler)
         closure.UI.className="wmeac-csv-closures-list-failed";
         handler && handler(false);
     };
-    var tmp3 = function applyClosure()
-    {
-        WMEAC.log("Now apply closure...");
-        if (closure.action=="add")
-            closure.closure.applyInWME(applySuccess, applyFailure);
-        else if (closure.action=='remove')
-            closure.closure.removeInWME(applySuccess, applyFailure);
-    };
-    
-    var tmp2 = function readyToApply() {
-        WMEAC.log("Test if ready to apply...");
-        if (W.app.layout.model.attributes.pendingOperations.length > 0 || W.app.layout.model.attributes.loadingFeatures==true)
-        {
-            WMEAC.log("Not yet. Waiting for WME...");
-            window.setTimeout(readyToApply, 500);
-        }
-        else
-        {
-            tmp3();
-        }
-    };
-    var tmp1 = function mapMovedEnd() {
-        WMEAC.log("Test if roads are reloaded...");
-        if (W.app.layout.model.attributes.pendingOperations.length > 0 || W.app.layout.model.attributes.loadingFeatures==true)
-        {
-            WMEAC.log("Not yet. Waiting for WME...");
-            window.setTimeout(mapMovedEnd, 500);
-        }
-        else
-        {
-            WMEAC.reloadRoadLayer();
-            tmp2();
-        }
-    };
-    window.setTimeout(tmp1, 1500);
+    WMEAC.log("Test if ready to apply...");
+    await WMEAC.waitMapLoaded();
+    WMEAC.log("Now apply closure...");
+    if (closure.action=="add")
+        closure.closure.applyInWME(applySuccess, applyFailure);
+    else if (closure.action=='remove')
+        closure.closure.removeInWME(applySuccess, applyFailure);
+
 };
 
 WMEAC.csvAddLog = function(text)
@@ -2649,7 +2657,7 @@ WMEAC.csvShowList = function(show)
 
 WMEAC.csvCheckAllSegments = function (i)
 {
-    if (i==-1) // firt call: init progressbar
+    if (i==-1) // first call: init progressbar
     {
         WMEAC.pb.update(0);
         WMEAC.pb.show(true);
@@ -2673,7 +2681,7 @@ WMEAC.csvCheckAllSegments = function (i)
         var b = W.map.calculateBounds();
         var b1 = new OpenLayers.Bounds(b[0],b[1],b[2],b[3]);
         b1 = b1.transform(new OpenLayers.Projection("EPSG:4326"), W.map.getProjectionObject());
-        var zoomRatio = Math.pow(2, W.map.zoom - currentClosure.closure.zoom);
+        var zoomRatio = Math.pow(2, WMEAC.wmeSDK.Map.getZoomLevel() - currentClosure.closure.zoom);
         var w = b1.getWidth()*1.7*zoomRatio;
         var h = b1.getHeight()*1.7*zoomRatio;
 

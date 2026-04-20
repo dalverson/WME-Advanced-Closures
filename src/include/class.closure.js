@@ -31,7 +31,7 @@ WMEAC.ClassClosure = function (options)
     this.eventId=null;
     if (options.hasOwnProperty('eventId') && options.eventId!='') this.eventId=options.eventId;
     
-    this.segIDs = this.segIDs.split(';');
+    this.segIDs = this.segIDs.split(';').map((s) => Number(s));
     var matches = this.lonlat.match(/lon=(-?\d+\.?\d*)&lat=(-?\d+\.?\d*)/);
     if (matches && matches.length==3)
         this.lonlat = {lon: parseFloat(matches[1]), lat: parseFloat(matches[2])};
@@ -71,11 +71,6 @@ WMEAC.ClassClosure = function (options)
             return WMEAC.wmeSDK.DataModel.Segments.hasPermissions({permission: "EDIT_CLOSURES", segmentId: seg.id });
         });
 
-        // SDK - need old style segment objects for now since closure code called getID() on these objects
-        var oldsegs = segs.map (function (e) {
-            return (W.model.segments.getObjectById(e.id));
-        });
-               
         if (segs.length==0)
         {
             failureHandler( {errors: [{attributes: {details: "No segment. Check permissions or existence."}}]} );
@@ -90,8 +85,7 @@ WMEAC.ClassClosure = function (options)
                 }).join(', ') + (c=='noCity'?'':' (' + c + ')'));
             }).join(' ; ');
             
-            var sc = require("Waze/Modules/Closures/Models/SharedClosure");
-            var closureDetails = {reason: this.reason, direction: (this.direction=="A to B"?WMEAC.sharedClosureDirection.A_TO_B:(this.direction=="B to A"?WMEAC.sharedClosureDirection.B_TO_A:WMEAC.sharedClosureDirection.TWO_WAY)), startDate: this.startDate, endDate: this.endDate, location: closureLocation, permanent: this.permanent=='Yes', segments: oldsegs};
+            var closureDetails = {reason: this.reason, direction: (this.direction=="A to B"?WMEAC.sharedClosureDirection.A_TO_B:(this.direction=="B to A"?WMEAC.sharedClosureDirection.B_TO_A:WMEAC.sharedClosureDirection.TWO_WAY)), startDate: this.startDate, endDate: this.endDate, location: closureLocation, permanent: this.permanent=='Yes', segments: this.segIDs};
             if (this.eventId!=null) closureDetails.eventId = this.eventId;
             WMEAC.addClosure(closureDetails, successHandler, failureHandler);
         }

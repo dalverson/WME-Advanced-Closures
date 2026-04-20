@@ -135,7 +135,7 @@ WMEAC.buildInlineClosureUI = function (closure, action)
                     <div class="wmeac-csv-closures-list-col-apply"><a href="#" title="Apply action of this closure"><i class="fa fa-arrow-circle-right"></i></a></div>\
                     <div class="wmeac-csv-closures-minilog" style="display: block;">' + (action=='add'?'Ready to apply':(action=='remove'?'Ready to remove':'')) + '</div>';
     // attach handlers
-    liElt.children[5].children[0].addEventListener('click', function (e) { // select the segs on this line of the CSV
+    liElt.children[5].children[0].addEventListener('click', async function (e) { // select the segs on this line of the CSV
         WMEAC.csvClearLog();
         // get closure id:
         var cid = parseInt(e.target.parentNode.parentNode.parentNode.getAttribute('closureID'));
@@ -144,77 +144,45 @@ WMEAC.buildInlineClosureUI = function (closure, action)
         });
         WMEAC.log('Closure to target:', closure);
         WMEAC.wmeSDK.Map.setMapCenter( { lonLat: closure.closure.lonlat, zoomLevel: closure.closure.zoom } );
-        var tmp3 = function selectSegments()
-        {
-            WMEAC.log("Now select segments...");
-            var segs = WMEAC.segmentsIDsToSegments(closure.closure.segIDs);
-            if (segs.length!=closure.closure.segIDs.length)
-            {
-                if (segs.length==0)
-                {
-                    WMEAC.csvAddLog("No segment found: " + closure.closure.comment + "(" + closure.closure.reason + ")\n");
-                    WMEAC.setCSVMiniLog(closure, "Selection failed: no segment found", 3);
-                }
-                else
-                {
-                    WMEAC.csvAddLog("Partial selection (" + segs.length + "/" + closure.closure.segIDs.length + "): " + closure.closure.comment + "(" + closure.closure.reason + ")\n");
-                    WMEAC.setCSVMiniLog(closure, "Partial selection: " + segs.length + "/" + closure.closure.segIDs.length, 2);
-                }
-                alert ("Warning: missing segments.\nFound " + segs.length + "/" + closure.closure.segIDs.length + " segment(s)");
-            }
-            else
-            {
-                WMEAC.csvAddLog("Selection ok (" + segs.length + "): " + closure.closure.comment + "(" + closure.closure.reason + ")\n");
-                WMEAC.setCSVMiniLog(closure, "Selection OK: " + segs.length, 1);
-            }
-            if (segs.length!=0)
-            {
-                const selection = { ids: closure.closure.segIDs, objectType: 'segment' };
-                WMEAC.wmeSDK.Editing.setSelection( { selection } );
-                var tmp = function selectionReady()
-                {
-                    if (W.selectionManager.getSelectedFeatures().length==0)
-                        window.setTimeout(selectionReady, 500);
-                    else
-                    {
-                        const ed = document.getElementsByClassName('segment-feature-editor');
-                        const tabs = ed[0].querySelector('wz-tabs');
-                        const tl = tabs.shadowRoot.querySelectorAll('.wz-tab-label');
-                        if ( tl && tl.length > 0) {
-                            tl[1].click();  // do we want to select the closures tab ?
-                        }
-                    }
-                };
-                window.setTimeout(tmp, 500);
-            }
-        };
-        var tmp2 = function readyToSelect() {
-            WMEAC.log("Test if ready to select...");
-            if (W.app.layout.model.attributes.pendingOperations.length > 0 || W.app.layout.model.attributes.loadingFeatures==true)
-            {
-                WMEAC.log("Not yet. Waiting for WME...");
-                window.setTimeout(readyToSelect, 500);
-            }
-            else
-            {
-                tmp3();
-            }
-        };
-        var tmp1 = function mapMovedEnd() {
-            WMEAC.log("Test if roads are reloaded...");
-            if (W.app.layout.model.attributes.pendingOperations.length > 0 || W.app.layout.model.attributes.loadingFeatures==true)
-            {
-                WMEAC.log("Not yet. Waiting for WME...");
-                window.setTimeout(mapMovedEnd, 500);
-            }
-            else
-            {
-                WMEAC.reloadRoadLayer();
-                tmp2();
-            }
-        };
-        window.setTimeout(tmp1, 500);
         e.preventDefault();
+        WMEAC.log("Test if ready to select...");
+        await WMEAC.waitMapLoaded();
+
+        WMEAC.log("Now select segments...");
+        var segs = WMEAC.segmentsIDsToSegments(closure.closure.segIDs);
+        if (segs.length!=closure.closure.segIDs.length)
+        {
+            if (segs.length==0)
+            {
+                WMEAC.csvAddLog("No segment found: " + closure.closure.comment + "(" + closure.closure.reason + ")\n");
+                WMEAC.setCSVMiniLog(closure, "Selection failed: no segment found", 3);
+            }
+            else
+            {
+                WMEAC.csvAddLog("Partial selection (" + segs.length + "/" + closure.closure.segIDs.length + "): " + closure.closure.comment + "(" + closure.closure.reason + ")\n");
+                WMEAC.setCSVMiniLog(closure, "Partial selection: " + segs.length + "/" + closure.closure.segIDs.length, 2);
+            }
+            alert ("Warning: missing segments.\nFound " + segs.length + "/" + closure.closure.segIDs.length + " segment(s)");
+        }
+        else
+        {
+            WMEAC.csvAddLog("Selection ok (" + segs.length + "): " + closure.closure.comment + "(" + closure.closure.reason + ")\n");
+            WMEAC.setCSVMiniLog(closure, "Selection OK: " + segs.length, 1);
+        }
+        if (segs.length!=0)
+        {
+            const ids = closure.closure.segIDs.map((s) => Number(s));
+            const selection = { ids, objectType: 'segment' };
+            WMEAC.wmeSDK.Editing.setSelection( { selection } );
+            await WMEAC.waitSelectionReady();
+            await new Promise(r => setTimeout(r,50));
+            const ed = document.getElementsByClassName('segment-feature-editor');
+            const tabs = ed[0].querySelector('wz-tabs');
+            const tl = tabs.shadowRoot.querySelectorAll('.wz-tab-label');
+            if ( tl && tl.length > 0) {
+                tl[1].click(); // do we want to select the closures tab ?
+            }
+        }
     });
     liElt.children[6].children[0].addEventListener('click', function (e) { // apply closure on the segs on this line of the CSV
         // get closure id:
@@ -231,7 +199,7 @@ WMEAC.buildInlineClosureUI = function (closure, action)
     return liElt;
 };
 
-WMEAC.csvApplyClosure = function(closure, handler)
+WMEAC.csvApplyClosure = async function(closure, handler)
 {
     WMEAC.wmeSDK.Map.setMapCenter( { lonLat: closure.closure.lonlat, zoomLevel: closure.closure.zoom } );
     function applySuccess(evt)
@@ -253,41 +221,14 @@ WMEAC.csvApplyClosure = function(closure, handler)
         closure.UI.className="wmeac-csv-closures-list-failed";
         handler && handler(false);
     };
-    var tmp3 = function applyClosure()
-    {
-        WMEAC.log("Now apply closure...");
-        if (closure.action=="add")
-            closure.closure.applyInWME(applySuccess, applyFailure);
-        else if (closure.action=='remove')
-            closure.closure.removeInWME(applySuccess, applyFailure);
-    };
-    
-    var tmp2 = function readyToApply() {
-        WMEAC.log("Test if ready to apply...");
-        if (W.app.layout.model.attributes.pendingOperations.length > 0 || W.app.layout.model.attributes.loadingFeatures==true)
-        {
-            WMEAC.log("Not yet. Waiting for WME...");
-            window.setTimeout(readyToApply, 500);
-        }
-        else
-        {
-            tmp3();
-        }
-    };
-    var tmp1 = function mapMovedEnd() {
-        WMEAC.log("Test if roads are reloaded...");
-        if (W.app.layout.model.attributes.pendingOperations.length > 0 || W.app.layout.model.attributes.loadingFeatures==true)
-        {
-            WMEAC.log("Not yet. Waiting for WME...");
-            window.setTimeout(mapMovedEnd, 500);
-        }
-        else
-        {
-            WMEAC.reloadRoadLayer();
-            tmp2();
-        }
-    };
-    window.setTimeout(tmp1, 1500);
+    WMEAC.log("Test if ready to apply...");
+    await WMEAC.waitMapLoaded();
+    WMEAC.log("Now apply closure...");
+    if (closure.action=="add")
+        closure.closure.applyInWME(applySuccess, applyFailure);
+    else if (closure.action=='remove')
+        closure.closure.removeInWME(applySuccess, applyFailure);
+
 };
 
 WMEAC.csvAddLog = function(text)
@@ -310,7 +251,7 @@ WMEAC.csvShowList = function(show)
 
 WMEAC.csvCheckAllSegments = function (i)
 {
-    if (i==-1) // firt call: init progressbar
+    if (i==-1) // first call: init progressbar
     {
         WMEAC.pb.update(0);
         WMEAC.pb.show(true);
@@ -334,7 +275,7 @@ WMEAC.csvCheckAllSegments = function (i)
         var b = W.map.calculateBounds();
         var b1 = new OpenLayers.Bounds(b[0],b[1],b[2],b[3]);
         b1 = b1.transform(new OpenLayers.Projection("EPSG:4326"), W.map.getProjectionObject());
-        var zoomRatio = Math.pow(2, W.map.zoom - currentClosure.closure.zoom);
+        var zoomRatio = Math.pow(2, WMEAC.wmeSDK.Map.getZoomLevel() - currentClosure.closure.zoom);
         var w = b1.getWidth()*1.7*zoomRatio;
         var h = b1.getHeight()*1.7*zoomRatio;
 

@@ -136,7 +136,7 @@ WMEAC.reloadRoadLayer = function ()
     // W.controller.reloadData();
 };
 
-WMEAC.reloadClosuresLayer = function (endHandler)
+WMEAC.reloadClosuresLayer = async function (endHandler)
 {
     // SDK - NEEDED ??
   /*  var l=W.map.getLayerByName("closures");
@@ -144,7 +144,7 @@ WMEAC.reloadClosuresLayer = function (endHandler)
     // W.controller.reloadData();
     */
     if (endHandler) {
-        WMEAC.waitMapLoaded();
+        await WMEAC.waitMapLoaded();
         endHandler();
     }
 };

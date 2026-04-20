@@ -92,57 +92,56 @@ WMEAC.initUI = async function ()
     // W.model.events.register("mergeend", null, WMEAC.refreshHighlight);
     // WMEAC.refreshHighlight();
     window.setTimeout(WMEAC.connectAdvancedClosureTabHandlers);
-    window.setTimeout(WMEAC.setupMTEobserver, 2000);
-};
 
-WMEAC.setupMTEobserver = function()
-{
-    var mteObserver = new MutationObserver(function(mutations) {
-        mutations.forEach(function(mutation) {
-            for (var i = 0; i < mutation.addedNodes.length; i++) {
-                var addedNode = mutation.addedNodes[i];
-
-                if (addedNode.nodeType === Node.TEXT_NODE && addedNode['s-nr'] ) {
-                    const x = $('.mte-edit-view > wz-section-header');
-                    if (x.length > 0) {
-                        const mtev = x[0].shadowRoot.querySelector('.subtitle');
-                        if (mtev) {
-                            mtev.style.overflow = 'visible';
-                            mtev.style.fontSize = '10px';
-                            break;
-                        }
-                    }
-                }
-            }
-        });
-    });
-    mteObserver.observe(WMEAC.getId('sidepanel-mtes'), {childList: true, subtree: true});
 };
 
 WMEAC.waitMapLoaded = async function()
 {
-    for (let j=0; j<100; j++) {
-        await new Promise(r => setTimeout(r,300));
-        const ldf = W.app.layout.model.attributes.loadingFeatures; // SDK - need access to this status
-        const pend = W.app.layout.model.attributes.pendingOperations.length;
-        console.debug('AC - pendingOps: ' + pend + ' ldf: ' + ldf);
-        if (pend > 0) {
-            console.debug('AC - pendingOps: ' + pend);
-            console.debug('AC - pending: ' + W.app.layout.model.attributes.pendingOperations[0]);
-        }
-        if (!ldf && pend==0) {
-            await new Promise(r => setTimeout(r,50));
-            break;
-        }
-    }
+    var count = 1;
+    return new Promise(function (resolve) {
+        var interval = setInterval(function () {
+            const ldf = W.app.attributes.loadingFeatures; // SDK - need access to this status
+            const pend = W.app.attributes.pendingOperations.length;
+            const mapl = WMEAC.wmeSDK.State.isMapLoading();
+            console.debug('AC - pendingOps: ' + pend + ' ldf: ' + ldf + ' isMapLd: ' + mapl);
+            count++;
+            if (pend > 0) {
+                console.debug('AC - pending: ' + W.app.attributes.pendingOperations.join());
+            }
+
+            if (!ldf && pend==0) {
+                clearInterval(interval);
+                resolve(null);
+            }
+            else if (count > 100) {
+                clearInterval(interval);;
+                console.warn('AC - timeout waiting for features loaded');
+                resolve(null)
+            }
+        }, 100);
+    });
+
 }
 WMEAC.waitSelectionReady = async function()
 {
-    for (let j=0; j<100; j++) {
-        let selection = WMEAC.wmeSDK.Editing.getSelection();
-        if (selection.ids.length > 0) break;
-        await new Promise(r => setTimeout(r,300));
-    }
+    var count = 1;
+    return new Promise(function (resolve) {
+        var interval = setInterval(function () {
+            const selection = WMEAC.wmeSDK.Editing.getSelection();
+            console.debug('AC - sel items: ' + selection.ids.length);
+            count++;
+
+            if (selection.ids.length > 0) {
+                clearInterval(interval);
+                resolve(null);
+            }
+            else if (count > 100) {
+                clearInterval(interval);;
+                console.warn('AC - timeout waiting for selection');
+                resolve(null)
+            }
+        }, 100);
+    });
 }
 
 WMEAC.installButtonInClosureTab = function (node)
@@ -521,7 +520,7 @@ WMEAC.connectAdvancedClosureDialogHandlers = function ()
             var direction = $('#wmeac-advanced-closure-dialog-direction').val();
             var isIT = $('#wmeac-advanced-closure-dialog-ignoretraffic').is(':checked');
             var mteId = $("#wmeac-advanced-closure-dialog-mteid").val();
-            closureList = rc.list.map(function (e) {
+            let closureList = rc.list.map(function (e) {
                 //return {reason: reason, direction: direction, startDate: e.start, endDate: e.end, location: cllocation, permanent: isIT};
                 var details = {reason: reason, direction: direction, startDate: e.start, endDate: e.end, location: "", permanent: isIT};
                 if (mteId)
@@ -532,12 +531,13 @@ WMEAC.connectAdvancedClosureDialogHandlers = function ()
             var selectionReversed=[];
             if (direction!='3') // not two way
             {
-                var rev = W.selectionManager.getReversedSegments();
+                let revsegs = WMEAC.wmeSDK.DataModel.Segments.getReversedSegments( { segmentIds: selection.ids });
                 let ids = selection.ids.filter(function (e) {
-                    if (rev[e])
-                    {
-                        selectionReversed.push(e);
-                        return false;
+                    for (let r in revsegs) {
+                        if (revsegs[r].id == e) {
+                            selectionReversed.push(e);
+                            return false;
+                        }
                     }
                     return true;
                 });
@@ -609,7 +609,7 @@ WMEAC.connectAdvancedClosureDialogHandlers = function ()
             var directionStr = direction==1?"(A &#8594; B)":(direction==2?"(B &#8594; A)":"(&#8646;)");
             var isIT = $('#wmeac-advanced-closure-dialog-ignoretraffic').is(':checked');
             const mteId = $("#wmeac-advanced-closure-dialog-mteid").val();
-            closureList = rc.list.map(function (e) {
+            let closureList = rc.list.map(function (e) {
                 //return {reason: reason, direction: direction, startDate: e.start, endDate: e.end, location: cllocation, permanent: isIT};
                 var details = {reason: reason, direction: direction, startDate: e.start, endDate: e.end, location: "", permanent: isIT};
                 if (mteId)
@@ -668,9 +668,9 @@ WMEAC.connectAdvancedClosureDialogHandlers = function ()
     });
     $('#wmeac-advanced-closure-dialog-each-dayall').on('click', function () {
         var atLeastOneChecked=false;
-        for (var i=0; i<7; i++)
+        for (let i=0; i<7; i++)
             atLeastOneChecked = atLeastOneChecked || $("#wmeac-advanced-closure-dialog-each-"+i).is(':checked');
-        for (var i=0; i<7; i++)
+        for (let i=0; i<7; i++)
             $("#wmeac-advanced-closure-dialog-each-"+i).prop('checked', !atLeastOneChecked);
         $('#wmeac-advanced-closure-dialog-each-dayall').prop('checked', !atLeastOneChecked);
     });
@@ -722,34 +722,10 @@ WMEAC.connectAdvancedClosureDialogHandlers = function ()
                 $(this).trigger('change');
             }
         });
-        // $('#wmeac-advanced-closure-dialog-duration-hour').spinner({
-            // min: 0,
-            // spin: function (event, ui) {
-                // $(this).trigger('change');
-            // }
-        // });
-        // $('#wmeac-advanced-closure-dialog-duration-minute').spinner({
-        // spin: function (event, ui) {
-                 // if (ui.value >= 60) {
-                     // $(this).spinner('value', ui.value - 60);
-                     // $('#wmeac-advanced-closure-dialog-duration-hour').spinner('stepUp');
-                     // return false;
-                 // } else if (ui.value < 0) {
-                     // $(this).spinner('value', ui.value + 60);
-                     // $('#wmeac-advanced-closure-dialog-duration-hour').spinner('stepDown');
-                     // return false;
-                 // }
-                 // $(this).trigger('change');
-             // },
-             // change: function (event) {
-                // if (event.target.value<0 || event.target.value>59)
-                    // $(this).spinner('value', 0);
-             // }
-         // });
+
     }
-     
-     
-     
+
+
      $('#wmeac-advanced-closure-dialog-repeat,#wmeac-advanced-closure-dialog-each,#wmeac-advanced-closure-dialog-holiday').on('click', function(e){
         window.setTimeout(WMEAC.refreshClosureList);
      });
